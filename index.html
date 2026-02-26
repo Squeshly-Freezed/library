@@ -15,6 +15,29 @@
         <h1>Your Library</h1>
         </div>
 
+        <dialog class="modal">
+            <h2>Enter book details:</h2>
+            <form action="/" method="post">
+                <label for="title">
+                    Title:
+                    <input type="text" id="title" name="title" minlength="3" maxlength="15" required>
+                </label>
+                <label for="author">
+                    Author:
+                    <input type="text" id="author" name="title" minlength="3" maxlength="15" required>
+                </label>
+                <label for="pages">
+                    Pages:
+                    <input type="text" id="pages" name="title" minlength="1" maxlength="4" required>
+                </label>
+                <label for="readstatus">
+                    Read Status:
+                    <input type="text" id="readstatus" name="title" minlength="3" maxlength="15" required>
+                </label>
+
+            </form>
+        </dialog>
+
 
         <div class="bodycontainer">
             <div class="bookgui">
@@ -31,8 +54,18 @@
                 </div>
                 <div class="book">
                     <img src="./img/redbooktransparent.png" alt="">
-                    <p id="title">fwe</p>
-                    <p id="author">Frank Munro</p><br>
+                    <div class="title">
+                        <p>Title: </p>
+                    </div>
+                    <div class="author">
+                        <p>Author: </p>
+                    </div>
+                    <div class="pages">
+                        <p>Pages: </p>
+                    </div>
+                    <div class="readstatus">
+                        <p>Read Status: </p>
+                    </div>
 
                 </div>
             </div>

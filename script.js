@@ -1,7 +1,5 @@
 const myLibrary = [];
-
-const addBookButton = document.querySelector(".addbookbutton");
-
+const isMobileViewport = window.matchMedia("(max-width: 768px)").matches;
 
 function Book(title, author, pages, readStatus) {
     if (!new.target) {
@@ -23,8 +21,12 @@ Book.prototype.changeReadStatus = function() {
 };
 
 function addBookToLibrary(title, author, pages, readStatus) {
+    !isMobileViewport ? modal.showModal() : setTimeout( () => {
+        modal.showModal();
+    }, 750);
     const book = new Book("poo", "wee", 123, true);
     myLibrary.push(book);
+    
     console.log(myLibrary);
 }
 
@@ -33,3 +35,11 @@ function displayBooks() {
         //update DOM
     });
 };
+
+const modal = document.querySelector(".modal");
+const addBookButton = document.querySelector(".addbookbutton");
+addBookButton.addEventListener("pointerup", addBookToLibrary);
+
+
+
+const book = document.querySelector(".book");
