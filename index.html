@@ -16,42 +16,48 @@
         </div>
 
         <dialog class="modal">
-            <h2>Enter book details:</h2>
+            <h2>Add a new book:</h2>
             <form action="/" method="post">
                 <label for="title">
                     Title:
                     <input type="text" id="title" name="title" minlength="3" maxlength="15" required>
                 </label>
+                <br><br>
                 <label for="author">
                     Author:
-                    <input type="text" id="author" name="title" minlength="3" maxlength="15" required>
+                    <input type="text" id="author" name="author" minlength="3" maxlength="15" required>
                 </label>
+                <br><br>
                 <label for="pages">
                     Pages:
-                    <input type="text" id="pages" name="title" minlength="1" maxlength="4" required>
+                    <input type="number" id="pages" name="pages" min="1" max="9999" required>
                 </label>
-                <label for="readstatus">
-                    Read Status:
-                    <input type="text" id="readstatus" name="title" minlength="3" maxlength="15" required>
+                <br><br>
+                <label for="readstatus" id="readstatuslabel">
+                    Finished reading:
+                    <input type="checkbox" id= "readstatus" name="readstatus" checked>
                 </label>
-
+                <br><br><br>
+                <button class="add" type="submit">Add</button>
+                <button class="cancel">Cancel</button>
             </form>
         </dialog>
 
 
         <div class="bodycontainer">
             <div class="bookgui">
-                <div class="addbook">
-                    <button type="submit" class="addbookbutton">
 
+                <div class="addbook">
+                    <button class="addbookbutton">
+                    <div class="svgwrapper">
                     <svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
                     <line x1="0" y1="60" x2="120" y2="60" stroke="white" stroke-width="20"/>
                     <line x1="60" y1="0" x2="60" y2="120" stroke="white" stroke-width="20"/>
                     </svg>
-
+                    </div>
                     </button>
-                    
                 </div>
+
                 <div class="book">
                     <img src="./img/redbooktransparent.png" alt="">
                     <div class="title">

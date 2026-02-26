@@ -21,6 +21,7 @@ body {
     flex-direction: column;
     color: white;
     cursor: default;
+    overflow: hidden;
 }
 
 .header {
@@ -34,11 +35,30 @@ body {
 }
 
 .modal {
+    font-size: calc(0.6vw + 0.4rem);
+    text-align: center;
     z-index: 3;
     padding: 40px;
     border-radius: 10px;
+    background-color: var(--main-grey);
+    color: white;
+    button {
+        padding: 10px;
+        width: 100px;
+        color: white;
+        border-radius: 5px;
+    }
+    button.add {
+        background-color: rgba(38, 190, 38, 0.742);
+    }
+    button.cancel {
+        background-color: rgba(255, 0, 0, 0.509);
+    }
     &::backdrop {
         background-color: rgba(0, 0, 0, 0.4);
+    }
+    h2 {
+        margin-bottom: 50px;
     }
 }
 
@@ -148,12 +168,16 @@ body {
                 0px 0px 15px 15px rgb(173, 168, 173);
     text-align: center;
     padding-top: 20px;
+    transition: transform 2s ease;
     h2 {
         padding-bottom: 20px;
         font-size: calc(1.3vw + 0.5rem);
     }
     p {
         font-size: calc(0.5vw + 0.5rem);
+    }
+    &:hover {
+        transform: scale(1.1);
     }
 }
 

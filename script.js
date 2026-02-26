@@ -12,6 +12,51 @@ function Book(title, author, pages, readStatus) {
     this.id = crypto.randomUUID();
 }
 
+
+
+const addBookButton = document.querySelector(".addbookbutton");
+const modal = document.querySelector(".modal");
+const title = document.querySelector("#title");
+const author = document.querySelector("#author");
+const pages = document.querySelector("#pages");
+const readStatus = document.querySelector("#readstatus");
+const form = document.querySelector("form");
+function getBookDetails () {
+    !isMobileViewport ? modal.showModal() : setTimeout( () => {
+        modal.showModal();
+    }, 750);
+    if (form.addEventListener) {
+        form.addEventListener("submit", function(event) {
+        event.preventDefault();
+        addBookToLibrary();
+        modal.close();
+        form.reset();
+        });
+    };
+    // console.log("finished executing getBookDetails");
+}
+addBookButton.addEventListener("pointerup", getBookDetails);
+
+
+
+function addBookToLibrary() {
+    const book = new Book(title.value, author.value, pages.value, readStatus.value);
+    myLibrary.push(book);
+    console.log(myLibrary);
+    console.log("finished executing addBookToLibrary");
+}
+
+
+
+const book = document.querySelector(".book");
+function displayBooks() {
+    myLibrary.forEach((book, index) => {
+        //update DOM
+    });
+};
+
+
+
 Book.prototype.changeReadStatus = function() {
     if (this.readStatus) {
         !this.readStatus; 
@@ -20,26 +65,15 @@ Book.prototype.changeReadStatus = function() {
     }
 };
 
-function addBookToLibrary(title, author, pages, readStatus) {
-    !isMobileViewport ? modal.showModal() : setTimeout( () => {
-        modal.showModal();
-    }, 750);
-    const book = new Book("poo", "wee", 123, true);
-    myLibrary.push(book);
-    
-    console.log(myLibrary);
-}
 
-function displayBooks() {
-    myLibrary.forEach((book, index) => {
-        //update DOM
-    });
-};
 
-const modal = document.querySelector(".modal");
-const addBookButton = document.querySelector(".addbookbutton");
-addBookButton.addEventListener("pointerup", addBookToLibrary);
+const cancelButton = document.querySelector(".cancel");
+cancelButton.addEventListener("pointerup", () => {
+    modal.close();
+});
 
 
 
-const book = document.querySelector(".book");
+
+
+
