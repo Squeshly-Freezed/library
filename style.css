@@ -21,9 +21,10 @@ body {
 .header {
     text-align: center;
     margin-bottom: auto;
-    background-color: rgb(92, 21, 142);
+    background-color: rgb(100, 23, 156);
     h1 {
         font-size: calc(1.7vw + 1rem);
+        text-shadow: 1px 1px 2px rgb(127, 127, 127);
     }
 }
 
@@ -43,7 +44,7 @@ body {
         order: 1;
         display: flex;
         aspect-ratio: 2 / 3;
-        height: 15vh;
+        height: 25vh;
         width: auto;
         margin: 2vw;
         .addbookbutton {
@@ -59,7 +60,7 @@ body {
                 }
             svg {
                 aspect-ratio: 2 / 3;
-                height: 15vh;
+                height: 25vh;
                 width: auto;
                 padding: 20px;
                 filter: drop-shadow(0px 0px 6px);
@@ -73,11 +74,21 @@ body {
         
     }
     .book {
+        position: relative;
+        display: flex;
         border-radius: 10px;
         aspect-ratio: 2 / 3;
-        height: 15vh;
+        height: 25vh;
         width: auto;
         margin: 2vw;
+        background-color: rgb(31, 30, 30);
+        box-shadow: 0px 0px 6px 3px rgb(190, 190, 190);
+        img {
+            opacity: 0.15;
+        }
+        p {
+            position: absolute;
+        }
     }
 }
 
@@ -85,8 +96,8 @@ body {
     flex: 1 1 auto;
     background-color: rgb(166, 166, 166);
     background-image: linear-gradient(rgb(132, 132, 132), rgb(96, 96, 96));
-    box-shadow: 0px 0px 10px 10px rgb(112, 112, 112),
-                0px 0px 20px 20px rgb(173, 168, 173);
+    box-shadow: 0px 0px 8px 8px rgb(112, 112, 112),
+                0px 0px 15px 15px rgb(173, 168, 173);
     text-align: center;
     padding-top: 20px;
     h2 {
