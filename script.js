@@ -20,22 +20,23 @@ const title = document.querySelector("#title");
 const author = document.querySelector("#author");
 const pages = document.querySelector("#pages");
 const readStatus = document.querySelector("#readstatus");
-const form = document.querySelector("form");
-function getBookDetails () {
+function showModal () {
     !isMobileViewport ? modal.showModal() : setTimeout( () => {
         modal.showModal();
     }, 750);
-    if (form.addEventListener) {
-        form.addEventListener("submit", function(event) {
-        event.preventDefault();
-        addBookToLibrary();
-        modal.close();
-        form.reset();
-        });
-    };
-    // console.log("finished executing getBookDetails");
 }
-addBookButton.addEventListener("pointerup", getBookDetails);
+addBookButton.addEventListener("pointerup", showModal);
+
+
+
+const form = document.querySelector("form");
+function submitData (event) {
+    event.preventDefault();
+    addBookToLibrary();
+    modal.close();
+    form.reset();
+}
+form.addEventListener("submit", submitData);
 
 
 
