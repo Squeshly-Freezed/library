@@ -10,6 +10,7 @@ function Book(title, author, pages, readStatus) {
     this.pages = pages;
     this.readStatus = readStatus;
     this.id = crypto.randomUUID();
+    this.isDisplayed = false;
 }
 
 
@@ -45,7 +46,6 @@ function addBookToLibrary() {
     myLibrary.push(book);
     displayBooks();
     console.log(myLibrary);
-    // console.log("finished executing addBookToLibrary");
 }
 
 
@@ -53,13 +53,16 @@ const bookGUI = document.querySelector(".bookgui");
 const book = document.querySelector(".book");
 function displayBooks() {
     myLibrary.forEach((book) => {
-                // let newBook = book.id;
-                newBook = document.createElement("div");
-                newBook.classList.add("book");
-                newBook.textContent = `Title: ${book.title}\nAuthor: ${book.author}\nPages: ${book.pages}\nFinished: ${book.readStatus}`;
-                bookGUI.appendChild(newBook);
-                console.log(`added ${newBook}book to display`);
-        });
+        if (!book.isDisplayed) {
+            book.isDisplayed = true;
+            bookDiv = document.createElement("div");
+            bookDiv.classList.add("book");
+            bookDiv.textContent = `Title: ${book.title}\nAuthor: ${book.author}\nPages: ${book.pages}\nFinished: ${book.readStatus}`;
+            bookDiv.dataset.id = book.id;
+            bookGUI.appendChild(bookDiv);
+            console.log(`added ${bookDiv}book to display`);
+        }
+    });
 };
 
 
