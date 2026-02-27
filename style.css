@@ -118,6 +118,7 @@ body {
     z-index: 1;
     position: relative;
     display: flex;
+    align-items: center;
     border-radius: 10px;
     aspect-ratio: 2 / 3;
     height: 25vh;
@@ -126,12 +127,18 @@ body {
     margin-left: 2vw;
     margin-right: 2vw;
     padding: 15px;
-    padding-top: 30px;
     font-size: calc(0.6vw + 0.4rem);
     white-space: pre-wrap;
     background-color: var(--main-grey);
     box-shadow: 0px 0px 6px 3px rgb(190, 190, 190);
     transition: transform 1.5s ease;
+    button {
+        margin-top: auto;
+        margin-left: auto;
+        padding: 5px;
+        background-color: rgba(255, 0, 0, 0.509);
+        border-radius: 5px;
+    }
     &:hover {
         transform: scale(1.2);
     }

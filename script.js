@@ -35,6 +35,11 @@ function submitData (event) {
 }
 form.addEventListener("submit", submitData);
 
+const cancelButton = document.querySelector(".cancel");
+cancelButton.addEventListener("pointerup", () => {
+    modal.close();
+});
+
 
 
 const title = document.querySelector("#title");
@@ -43,6 +48,7 @@ const pages = document.querySelector("#pages");
 const readStatus = document.querySelector("#readstatus");
 function addBookToLibrary() {
     const book = new Book(title.value, author.value, pages.value, readStatus.value);
+    //may need to name elements by UUID here
     myLibrary.push(book);
     displayBooks();
     console.log(myLibrary);
@@ -59,18 +65,32 @@ function displayBooks() {
             bookDiv.classList.add("book");
             bookDiv.textContent = `Title: ${book.title}\n\nAuthor: ${book.author}\n\nPages: ${book.pages}\n\nFinished: ${book.readStatus}`;
             bookDiv.dataset.id = book.id;
+            removeButton = document.createElement("button");
+            removeButton.textContent = "Remove";
+            removeButton.addEventListener("pointerup", removeBook);
+            bookDiv.appendChild(removeButton);
             chooseRandomBookBackground(bookDiv);
             bookGUI.appendChild(bookDiv);
-            console.log(`added ${bookDiv}book to display`);
         }
     });
 };
 
 
 
+function removeBook(event) {
+    const itemToDelete = removeButton.parentElement.dataset.id;
+    const index = myLibrary.indexOf(itemToDelete);
+    if (index > -1) myLibrary.splice(index, 1);
+    event.target.parentElement.remove();
+    console.log(myLibrary);
+}
+
+
+
 function chooseRandomBookBackground(bookDiv) {
     let randomNumber = Math.floor(Math.random() * 5) + 1;
     switch (randomNumber) {
+    
         case 1:
             bookDiv.style.backgroundImage = ("url('./img/redbooktransparent.png')");
             break;
@@ -101,10 +121,7 @@ Book.prototype.changeReadStatus = function() {
 
 
 
-const cancelButton = document.querySelector(".cancel");
-cancelButton.addEventListener("pointerup", () => {
-    modal.close();
-});
+
 
 displayBooks();
 
