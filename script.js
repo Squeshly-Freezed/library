@@ -37,6 +37,7 @@ form.addEventListener("submit", submitData);
 
 const cancelButton = document.querySelector(".cancel");
 cancelButton.addEventListener("pointerup", () => {
+    form.reset();
     modal.close();
 });
 
@@ -47,17 +48,16 @@ const author = document.querySelector("#author");
 const pages = document.querySelector("#pages");
 const readStatus = document.querySelector("#readstatus");
 function addBookToLibrary() {
-    const book = new Book(title.value, author.value, pages.value, readStatus.value);
-    //may need to name elements by UUID here
+    let book = new Book(title.value, author.value, pages.value, readStatus.value);
     myLibrary.push(book);
-    displayBooks();
+    displayBook();
     console.log(myLibrary);
 }
 
 
 const bookGUI = document.querySelector(".bookgui");
 const book = document.querySelector(".book");
-function displayBooks() {
+function displayBook() {
     myLibrary.forEach((book) => {
         if (!book.isDisplayed) {
             book.isDisplayed = true;
@@ -78,9 +78,10 @@ function displayBooks() {
 
 
 function removeBook(event) {
-    const itemToDelete = removeButton.parentElement.dataset.id;
-    const index = myLibrary.indexOf(itemToDelete);
-    if (index > -1) myLibrary.splice(index, 1);
+    const idToDelete = event.target.parentElement.dataset.id;
+    for (let index = 0; index < myLibrary.length; index++) {
+        if (myLibrary[index].id === idToDelete) myLibrary.splice(index, 1);
+    }
     event.target.parentElement.remove();
     console.log(myLibrary);
 }
@@ -89,8 +90,9 @@ function removeBook(event) {
 
 function chooseRandomBookBackground(bookDiv) {
     let randomNumber = Math.floor(Math.random() * 5) + 1;
+    bookDiv.style.backgroundSize = "cover";
+    bookDiv.style.backgroundColor = "rgba(30, 30, 30, 0.8)";
     switch (randomNumber) {
-    
         case 1:
             bookDiv.style.backgroundImage = ("url('./img/redbooktransparent.png')");
             break;
@@ -118,13 +120,4 @@ Book.prototype.changeReadStatus = function() {
         this.readStatus;
     }
 };
-
-
-
-
-
-displayBooks();
-
-
-
 
