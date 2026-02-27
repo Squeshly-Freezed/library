@@ -16,10 +16,6 @@ function Book(title, author, pages, readStatus) {
 
 const addBookButton = document.querySelector(".addbookbutton");
 const modal = document.querySelector(".modal");
-const title = document.querySelector("#title");
-const author = document.querySelector("#author");
-const pages = document.querySelector("#pages");
-const readStatus = document.querySelector("#readstatus");
 function showModal () {
     !isMobileViewport ? modal.showModal() : setTimeout( () => {
         modal.showModal();
@@ -40,20 +36,30 @@ form.addEventListener("submit", submitData);
 
 
 
+const title = document.querySelector("#title");
+const author = document.querySelector("#author");
+const pages = document.querySelector("#pages");
+const readStatus = document.querySelector("#readstatus");
 function addBookToLibrary() {
     const book = new Book(title.value, author.value, pages.value, readStatus.value);
     myLibrary.push(book);
+    displayBooks();
     console.log(myLibrary);
-    console.log("finished executing addBookToLibrary");
+    // console.log("finished executing addBookToLibrary");
 }
 
 
-
+const bookGUI = document.querySelector(".bookgui");
 const book = document.querySelector(".book");
 function displayBooks() {
-    myLibrary.forEach((book, index) => {
-        //update DOM
-    });
+    myLibrary.forEach((book) => {
+                // let newBook = book.id;
+                newBook = document.createElement("div");
+                newBook.classList.add("book");
+                newBook.textContent = `Title: ${book.title}\nAuthor: ${book.author}\nPages: ${book.pages}\nFinished: ${book.readStatus}`;
+                bookGUI.appendChild(newBook);
+                console.log(`added ${newBook}book to display`);
+        });
 };
 
 
@@ -73,7 +79,7 @@ cancelButton.addEventListener("pointerup", () => {
     modal.close();
 });
 
-
+displayBooks();
 
 
 
