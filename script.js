@@ -35,6 +35,8 @@ function submitData (event) {
 }
 form.addEventListener("submit", submitData);
 
+
+
 const cancelButton = document.querySelector(".cancel");
 cancelButton.addEventListener("pointerup", () => {
     form.reset();
@@ -48,11 +50,12 @@ const author = document.querySelector("#author");
 const pages = document.querySelector("#pages");
 const readStatus = document.querySelector("#readstatus");
 function addBookToLibrary() {
-    let book = new Book(title.value, author.value, pages.value, readStatus.value);
+    let book = new Book(title.value, author.value, pages.value, readStatus.checked);
     myLibrary.push(book);
     displayBook();
     console.log(myLibrary);
 }
+
 
 
 const bookGUI = document.querySelector(".bookgui");
@@ -63,19 +66,25 @@ function displayBook() {
             book.isDisplayed = true;
             bookDiv = document.createElement("div");
             bookDiv.classList.add("book");
-            bookDiv.textContent = `Title: ${book.title}\n\nAuthor: ${book.author}\n\nPages: ${book.pages}\n\nFinished: ${book.readStatus}`;
+            bookDiv.textContent = `Title: ${book.title}\n\nAuthor: ${book.author}\n\nPages: ${book.pages}\n\nFinished: ${readableBookReadStatus(book.readStatus)}`;
             bookDiv.dataset.id = book.id;
             removeButton = document.createElement("button");
             removeButton.textContent = "Remove";
             removeButton.addEventListener("pointerup", removeBook);
+            changeReadStatusButton = document.createElement("button");
+            changeReadStatusButton.textContent = "Change";
+            changeReadStatusButton.addEventListener("pointerup", () => book.changeReadStatus());
             bookDiv.appendChild(removeButton);
+            bookDiv.appendChild(changeReadStatusButton);
             chooseRandomBookBackground(bookDiv);
             bookGUI.appendChild(bookDiv);
         }
     });
 };
 
-
+function readableBookReadStatus(bookReadStatus) {
+    return bookReadStatus ? "Yes" : "No";
+}
 
 function removeBook(event) {
     const idToDelete = event.target.parentElement.dataset.id;
@@ -114,10 +123,8 @@ function chooseRandomBookBackground(bookDiv) {
 
 
 Book.prototype.changeReadStatus = function() {
-    if (this.readStatus) {
-        !this.readStatus; 
-    } else if (!this.readStatus) {
-        this.readStatus;
-    }
+    console.log(this);
+    this.readStatus = !this.readStatus;
+    //update display
 };
 
