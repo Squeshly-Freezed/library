@@ -57,13 +57,37 @@ function displayBooks() {
             book.isDisplayed = true;
             bookDiv = document.createElement("div");
             bookDiv.classList.add("book");
-            bookDiv.textContent = `Title: ${book.title}\nAuthor: ${book.author}\nPages: ${book.pages}\nFinished: ${book.readStatus}`;
+            bookDiv.textContent = `Title: ${book.title}\n\nAuthor: ${book.author}\n\nPages: ${book.pages}\n\nFinished: ${book.readStatus}`;
             bookDiv.dataset.id = book.id;
+            chooseRandomBookBackground(bookDiv);
             bookGUI.appendChild(bookDiv);
             console.log(`added ${bookDiv}book to display`);
         }
     });
 };
+
+
+
+function chooseRandomBookBackground(bookDiv) {
+    let randomNumber = Math.floor(Math.random() * 5) + 1;
+    switch (randomNumber) {
+        case 1:
+            bookDiv.style.backgroundImage = ("url('./img/redbooktransparent.png')");
+            break;
+        case 2:
+            bookDiv.style.backgroundImage = ("url('./img/purplebooktransparent.png')");
+            break;
+        case 3:
+            bookDiv.style.backgroundImage = ("url('./img/keybooktransparent.png')");
+            break;
+        case 4:
+            bookDiv.style.backgroundImage = ("url('./img/greenbooktransparent.png')");
+            break;
+        case 5:
+            bookDiv.style.backgroundImage = ("url('./img/blackbooktransparent.png')");
+            break;
+    }
+}
 
 
 
