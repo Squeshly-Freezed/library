@@ -66,13 +66,16 @@ function displayBook() {
             book.isDisplayed = true;
             bookDiv = document.createElement("div");
             bookDiv.classList.add("book");
-            bookDiv.textContent = `Title: ${book.title}\n\nAuthor: ${book.author}\n\nPages: ${book.pages}\n\nFinished: ${readableBookReadStatus(book.readStatus)}`;
+            // bookDiv.textContent = `Title: ${book.title}\n\nAuthor: ${book.author}\n\nPages: ${book.pages}\n\nFinished: ${readableBookReadStatus(book.readStatus)}`;
+            setTextContent(book, bookDiv);
             bookDiv.dataset.id = book.id;
             removeButton = document.createElement("button");
             removeButton.textContent = "Remove";
+            removeButton.classList.add("remove");
             removeButton.addEventListener("pointerup", removeBook);
             changeReadStatusButton = document.createElement("button");
             changeReadStatusButton.textContent = "Change";
+            changeReadStatusButton.classList.add("change");
             changeReadStatusButton.addEventListener("pointerup", () => book.changeReadStatus());
             bookDiv.appendChild(removeButton);
             bookDiv.appendChild(changeReadStatusButton);
@@ -81,6 +84,15 @@ function displayBook() {
         }
     });
 };
+
+function setTextContent (book, bookDiv) {
+    [...bookDiv.children].forEach(child => {
+        if (child.matches("div")) child.remove();
+    });
+    const textDiv = document.createElement("div");
+    textDiv.textContent = `Title: ${book.title}\n\nAuthor: ${book.author}\n\nPages: ${book.pages}\n\nFinished: ${readableBookReadStatus(book.readStatus)}`;
+    bookDiv.appendChild(textDiv);
+}
 
 function readableBookReadStatus(bookReadStatus) {
     return bookReadStatus ? "Yes" : "No";
@@ -123,8 +135,13 @@ function chooseRandomBookBackground(bookDiv) {
 
 
 Book.prototype.changeReadStatus = function() {
-    console.log(this);
+    console.log("changedreadstatus");
     this.readStatus = !this.readStatus;
-    //update display
-};
-
+    const divList = document.getElementsByTagName("div");
+    [...divList].forEach((div) => {
+        if (div.dataset.id === this.id) {
+            // div.textContent = `Title: ${this.title}\n\nAuthor: ${this.author}\n\nPages: ${this.pages}\n\nFinished: ${readableBookReadStatus(this.readStatus)}`;
+            setTextContent(this, div);
+        }
+    });
+}
