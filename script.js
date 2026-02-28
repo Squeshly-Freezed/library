@@ -1,4 +1,6 @@
 const myLibrary = [];
+let randomNumber;
+let previousRandomNumber;
 const isMobileViewport = window.matchMedia("(max-width: 768px)").matches;
 
 function Book(title, author, pages, readStatus) {
@@ -118,9 +120,12 @@ function removeBook(event) {
 }
 
 function chooseRandomBookBackground(bookDiv) {
-    let randomNumber = Math.floor(Math.random() * 5) + 1;
+    while (previousRandomNumber === randomNumber) {
+        randomNumber = getRandomNumber();
+    }
     bookDiv.style.backgroundSize = "cover";
     bookDiv.style.backgroundColor = "rgba(30, 30, 30, 0.8)";
+    previousRandomNumber = randomNumber;
     switch (randomNumber) {
         case 1:
             bookDiv.style.backgroundImage = ("url('./img/redbooktransparent.png')");
@@ -138,6 +143,10 @@ function chooseRandomBookBackground(bookDiv) {
             bookDiv.style.backgroundImage = ("url('./img/blackbooktransparent.png')");
             break;
     }
+}
+
+function getRandomNumber () {
+    return Math.floor(Math.random() * 5) + 1;
 }
 
 window.addEventListener("contextmenu", (event) => {
