@@ -13,6 +13,17 @@ function Book(title, author, pages, readStatus) {
     this.isDisplayed = false;
 }
 
+Book.prototype.changeReadStatus = function() {
+    this.readStatus = !this.readStatus;
+    const divList = document.getElementsByTagName("div");
+    [...divList].forEach((div) => {
+        if (div.dataset.id === this.id) {
+            setTextContent(this, div);
+        }
+    });
+    runBibliometrics();
+}
+
 
 
 const addBookButton = document.querySelector(".addbookbutton");
@@ -48,6 +59,7 @@ const readStatus = document.querySelector("#readstatus");
 function addBookToLibrary() {
     let book = new Book(title.value, author.value, pages.value, readStatus.checked);
     myLibrary.push(book);
+    runBibliometrics();
     displayBook();
 }
 
@@ -102,6 +114,7 @@ function removeBook(event) {
         if (myLibrary[index].id === idToDelete) myLibrary.splice(index, 1);
     }
     event.target.parentElement.remove();
+    runBibliometrics();
 }
 
 function chooseRandomBookBackground(bookDiv) {
@@ -127,14 +140,17 @@ function chooseRandomBookBackground(bookDiv) {
     }
 }
 
-
-
-Book.prototype.changeReadStatus = function() {
-    this.readStatus = !this.readStatus;
-    const divList = document.getElementsByTagName("div");
-    [...divList].forEach((div) => {
-        if (div.dataset.id === this.id) {
-            setTextContent(this, div);
+function runBibliometrics() {
+    let totalBooks = myLibrary.length;
+    let completedBooks = 0;
+    let totalPages = 0;
+    let pagesRead = 0;
+    myLibrary.forEach(book => {
+        totalPages += parseInt(book.pages);
+        if (book.readStatus) {
+            completedBooks++;
+            pagesRead += parseInt(book.pages);
         }
     });
+    console.log(totalBooks, completedBooks, totalPages, pagesRead);
 }
