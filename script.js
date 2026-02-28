@@ -152,5 +152,9 @@ function runBibliometrics() {
             pagesRead += parseInt(book.pages);
         }
     });
-    console.log(totalBooks, completedBooks, totalPages, pagesRead);
+    document.querySelector(".totalbooks").textContent = `Total Books = ${totalBooks}`;
+    document.querySelector(".completedbooks").textContent = `Completed Books = ${completedBooks}`;
+    document.querySelector(".totalpages").textContent = `Total Pages = ${totalPages}`;
+    document.querySelector(".pagesread").textContent = `Pages Read = ${pagesRead}`;
 }
+runBibliometrics();
