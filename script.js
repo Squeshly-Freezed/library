@@ -140,6 +140,10 @@ function chooseRandomBookBackground(bookDiv) {
     }
 }
 
+window.addEventListener("contextmenu", (event) => {
+    event.preventDefault();
+})
+
 function runBibliometrics() {
     let totalBooks = myLibrary.length;
     let completedBooks = 0;
