@@ -3,6 +3,8 @@ let randomNumber;
 let previousRandomNumber;
 const isMobileViewport = window.matchMedia("(max-width: 768px)").matches;
 
+
+
 function Book(title, author, pages, readStatus) {
     if (!new.target) {
         throw Error("You must use 'new' keyword when instantializing object");
@@ -11,6 +13,7 @@ function Book(title, author, pages, readStatus) {
     this.author = author;
     this.pages = pages;
     this.readStatus = readStatus;
+    this.pictureNumber = 0;
     this.id = crypto.randomUUID();
     this.isDisplayed = false;
 }
@@ -25,6 +28,10 @@ Book.prototype.changeReadStatus = function() {
     });
     saveState(appState);
     runBibliometrics();
+}
+
+Book.prototype.assignPictureNumber = function() {
+    this.pictureNumber = getRandomNumber();
 }
 
 
@@ -55,6 +62,7 @@ cancelButton.addEventListener("pointerup", () => {
 
 function createBook() {
     let book = new Book(title.value, author.value, pages.value, readStatus.checked);
+    book.assignPictureNumber();
     addBookToLibrary(book);
 }
 
@@ -62,6 +70,7 @@ function rehydrateBook(appState) {
     appState.forEach((element) => {
         let book = new Book(element.title, element.author, element.pages, element.readStatus);
         book.id = element.id;
+        book.pictureNumber = element.pictureNumber;
         addBookToLibrary(book);
     });
 }
@@ -73,19 +82,15 @@ const readStatus = document.querySelector("#readstatus");
 function addBookToLibrary(book) {
     if (!myLibrary.includes(book)) { 
         myLibrary.push(book);
-
         saveState(appState);
     }
     runBibliometrics();
-    buildBookInDOM();
+    buildBookInDOM(book);
 }
-
-
 
 const bookGUI = document.querySelector(".bookgui");
 const book = document.querySelector(".book");
-function buildBookInDOM() {
-    myLibrary.forEach((book) => {
+function buildBookInDOM(book) {
         if (!book.isDisplayed) {
             book.isDisplayed = true;
             const bookDiv = document.createElement("div");
@@ -93,10 +98,9 @@ function buildBookInDOM() {
             bookDiv.dataset.id = book.id;
             setTextContent(book, bookDiv);
             addButtons(book, bookDiv);
-            chooseRandomBookBackground(bookDiv);
+            chooseBookBackground(book, bookDiv);
             bookGUI.appendChild(bookDiv);
         }
-    });
 };
 
 function setTextContent (book, bookDiv) {
@@ -121,10 +125,6 @@ function addButtons (book, bookDiv) {
             bookDiv.appendChild(changeReadStatusButton);
 }
 
-function readableBookReadStatus(bookReadStatus) {
-    return bookReadStatus ? "Yes" : "No";
-}
-
 function removeBook(event) {
     const idToDelete = event.target.parentElement.dataset.id;
     for (let index = 0; index < myLibrary.length; index++) {
@@ -135,14 +135,12 @@ function removeBook(event) {
     runBibliometrics();
 }
 
-function chooseRandomBookBackground(bookDiv) {
-    while (previousRandomNumber === randomNumber) {
-        randomNumber = getRandomNumber();
-    }
+
+
+function chooseBookBackground(book, bookDiv) {
     bookDiv.style.backgroundSize = "cover";
     bookDiv.style.backgroundColor = "rgba(30, 30, 30, 0.8)";
-    previousRandomNumber = randomNumber;
-    switch (randomNumber) {
+    switch (book.pictureNumber) {
         case 1:
             bookDiv.style.backgroundImage = ("url('./img/redbooktransparent.png')");
             break;
@@ -161,13 +159,7 @@ function chooseRandomBookBackground(bookDiv) {
     }
 }
 
-function getRandomNumber () {
-    return Math.floor(Math.random() * 5) + 1;
-}
 
-window.addEventListener("contextmenu", (event) => {
-    event.preventDefault();
-})
 
 function runBibliometrics() {
     let totalBooks = myLibrary.length;
@@ -188,6 +180,23 @@ function runBibliometrics() {
 }
 
 
+
+function readableBookReadStatus(bookReadStatus) {
+    return bookReadStatus ? "Yes" : "No";
+}
+
+function getRandomNumber() {
+    while (previousRandomNumber === randomNumber) {
+        randomNumber = Math.floor(Math.random() * 5) + 1;
+    }
+    previousRandomNumber = randomNumber;
+    return randomNumber;
+}
+
+window.addEventListener("contextmenu", (event) => {
+    event.preventDefault();
+})
+
 function saveState() {
     localStorage.setItem("myLibrary", JSON.stringify(myLibrary));
 }
@@ -195,6 +204,8 @@ function loadState() {
     let storedState = localStorage.getItem("myLibrary");
     return storedState ? JSON.parse(storedState) : null;
 }
+
+
 
 let appState = loadState() || [];
 rehydrateBook(appState);

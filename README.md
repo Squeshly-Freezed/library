@@ -21,11 +21,13 @@ What I've learned:
 
 - Object instance creation with a constructor.
 - Manipulating object properties.
-- Using object prototype for method delegation.
+- Using objects' prototype for method delegation.
 - Experience working with, and animating SVG's.
 - FlexBox!
 - Writing clean code.
 - Making a fully responsive layout.
+- Tinkering with localStorage.
 
 My thoughts on the project:
-This project has turned out well - aesthetically pleasing, fully responsive, and very functional. It does what I wanted it to do, and with no bugs. 
+This project has turned out well - aesthetically pleasing, fully responsive, and very functional. It does what I wanted it to do, and with no bugs.
+Added a few bells and whistles, and did some rough tinkering with LocalStorage - got working save state functionality.
