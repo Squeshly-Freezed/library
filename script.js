@@ -23,6 +23,7 @@ Book.prototype.changeReadStatus = function() {
             setTextContent(this, div);
         }
     });
+    saveState(appState);
     runBibliometrics();
 }
 
@@ -40,7 +41,7 @@ addBookButton.addEventListener("pointerup", showModal);
 const form = document.querySelector("form");
 function submitData (event) {
     event.preventDefault();
-    addBookToLibrary();
+    createBook();
     modal.close();
     form.reset();
 }
@@ -52,26 +53,38 @@ cancelButton.addEventListener("pointerup", () => {
     modal.close();
 });
 
+function createBook() {
+    let book = new Book(title.value, author.value, pages.value, readStatus.checked);
+    addBookToLibrary(book);
+}
 
+function rehydrateBook(appState) {
+    appState.forEach((element) => {
+        let book = new Book(element.title, element.author, element.pages, element.readStatus);
+        book.id = element.id;
+        addBookToLibrary(book);
+    });
+}
 
 const title = document.querySelector("#title");
 const author = document.querySelector("#author");
 const pages = document.querySelector("#pages");
 const readStatus = document.querySelector("#readstatus");
-function addBookToLibrary() {
-    let book = new Book(title.value, author.value, pages.value, readStatus.checked);
-    myLibrary.push(book);
-    appState.count++;
-    saveState(appState);
+function addBookToLibrary(book) {
+    if (!myLibrary.includes(book)) { 
+        myLibrary.push(book);
+
+        saveState(appState);
+    }
     runBibliometrics();
-    displayBook();
+    buildBookInDOM();
 }
 
 
 
 const bookGUI = document.querySelector(".bookgui");
 const book = document.querySelector(".book");
-function displayBook() {
+function buildBookInDOM() {
     myLibrary.forEach((book) => {
         if (!book.isDisplayed) {
             book.isDisplayed = true;
@@ -117,6 +130,7 @@ function removeBook(event) {
     for (let index = 0; index < myLibrary.length; index++) {
         if (myLibrary[index].id === idToDelete) myLibrary.splice(index, 1);
     }
+    saveState(appState);
     event.target.parentElement.remove();
     runBibliometrics();
 }
@@ -172,20 +186,15 @@ function runBibliometrics() {
     document.querySelector(".totalpages").textContent = `Total Pages = ${totalPages}`;
     document.querySelector(".pagesread").textContent = `Pages Read = ${pagesRead}`;
 }
-runBibliometrics();
-loadState();
+
 
 function saveState() {
-    console.log("savedState");
-    localStorage.setItem("myLibraryArray", JSON.stringify(myLibrary));
+    localStorage.setItem("myLibrary", JSON.stringify(myLibrary));
 }
 function loadState() {
-    let storedState = localStorage.getItem("myLibraryArray");
-    console.log("loadedState");
+    let storedState = localStorage.getItem("myLibrary");
     return storedState ? JSON.parse(storedState) : null;
 }
 
-let appState = loadState() || { count:0 };
-
-// appState.count++;
-// saveState(appState);
+let appState = loadState() || [];
+rehydrateBook(appState);
