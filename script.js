@@ -61,6 +61,8 @@ const readStatus = document.querySelector("#readstatus");
 function addBookToLibrary() {
     let book = new Book(title.value, author.value, pages.value, readStatus.checked);
     myLibrary.push(book);
+    appState.count++;
+    saveState(appState);
     runBibliometrics();
     displayBook();
 }
@@ -171,3 +173,19 @@ function runBibliometrics() {
     document.querySelector(".pagesread").textContent = `Pages Read = ${pagesRead}`;
 }
 runBibliometrics();
+loadState();
+
+function saveState() {
+    console.log("savedState");
+    localStorage.setItem("myLibraryArray", JSON.stringify(myLibrary));
+}
+function loadState() {
+    let storedState = localStorage.getItem("myLibraryArray");
+    console.log("loadedState");
+    return storedState ? JSON.parse(storedState) : null;
+}
+
+let appState = loadState() || { count:0 };
+
+// appState.count++;
+// saveState(appState);
