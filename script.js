@@ -6,17 +6,22 @@ const isMobileViewport = window.matchMedia("(max-width: 768px)").matches;
 
 
 class Book {
+    isDisplayed = false;
+    pictureNumber = Helpers.getRandomNumber();
+    id = crypto.randomUUID();
+
     constructor (title, author, pages, readStatus) {
         this.title = title;
         this.author = author;
         this.pages = pages;
         this.readStatus = readStatus;
-        this.pictureNumber = 0; // change to computed method
-        this.id = crypto.randomUUID();
-        this.isDisplayed = false;
+    }
+    changeReadStatus () {
+        this.readStatus = !this.readStatus;
     }
 }
 
+//move whole function to ScreenController.
 Book.prototype.changeReadStatus = function() {
     this.readStatus = !this.readStatus;
     const divList = document.getElementsByTagName("div");
@@ -25,12 +30,8 @@ Book.prototype.changeReadStatus = function() {
             setTextContent(this, div);
         }
     });
-    saveState(appState);
-    runBibliometrics();
-}
-
-Book.prototype.assignPictureNumber = function() {
-    this.pictureNumber = getRandomNumber();
+    saveState(appState); // keep here ?
+    // runBibliometrics(); move to ScreenController
 }
 
 class Helpers {
