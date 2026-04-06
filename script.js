@@ -1,21 +1,20 @@
+"use strict";
+
 const myLibrary = [];
-let randomNumber;
-let previousRandomNumber;
 const isMobileViewport = window.matchMedia("(max-width: 768px)").matches;
 
 
 
-function Book(title, author, pages, readStatus) {
-    if (!new.target) {
-        throw Error("You must use 'new' keyword when instantializing object");
+class Book {
+    constructor (title, author, pages, readStatus) {
+        this.title = title;
+        this.author = author;
+        this.pages = pages;
+        this.readStatus = readStatus;
+        this.pictureNumber = 0; // change to computed method
+        this.id = crypto.randomUUID();
+        this.isDisplayed = false;
     }
-    this.title = title;
-    this.author = author;
-    this.pages = pages;
-    this.readStatus = readStatus;
-    this.pictureNumber = 0;
-    this.id = crypto.randomUUID();
-    this.isDisplayed = false;
 }
 
 Book.prototype.changeReadStatus = function() {
@@ -34,7 +33,18 @@ Book.prototype.assignPictureNumber = function() {
     this.pictureNumber = getRandomNumber();
 }
 
+class Helpers {
+    static #randomNumber = 0;
+    static #previousRandomNumber = 0;
 
+    static getRandomNumber() {
+        while (this.#previousRandomNumber === this.#randomNumber) {
+            this.#randomNumber = Math.floor(Math.random() * 5) + 1;
+        }
+        this.#previousRandomNumber = this.#randomNumber;
+        return this.#randomNumber;
+    }
+}
 
 const addBookButton = document.querySelector(".addbookbutton");
 const modal = document.querySelector(".modal");
@@ -89,7 +99,6 @@ function addBookToLibrary(book) {
 }
 
 const bookGUI = document.querySelector(".bookgui");
-const book = document.querySelector(".book");
 function buildBookInDOM(book) {
         if (!book.isDisplayed) {
             book.isDisplayed = true;
@@ -108,7 +117,7 @@ function setTextContent (book, bookDiv) {
         if (child.matches("div")) child.remove();
     });
     const textDiv = document.createElement("div");
-    textDiv.textContent = `Title: ${book.title}\n\nAuthor: ${book.author}\n\nPages: ${book.pages}\n\nFinished: ${readableBookReadStatus(book.readStatus)}`;
+    textDiv.textContent = `Title: ${book.title}\n\nAuthor: ${book.author}\n\nPages: ${book.pages}\n\nFinished: ${book.readStatus === true ? "Yes" : "No"}`;
     bookDiv.appendChild(textDiv);
 }
 
@@ -177,20 +186,6 @@ function runBibliometrics() {
     document.querySelector(".completedbooks").textContent = `Completed Books = ${completedBooks}`;
     document.querySelector(".totalpages").textContent = `Total Pages = ${totalPages}`;
     document.querySelector(".pagesread").textContent = `Pages Read = ${pagesRead}`;
-}
-
-
-
-function readableBookReadStatus(bookReadStatus) {
-    return bookReadStatus ? "Yes" : "No";
-}
-
-function getRandomNumber() {
-    while (previousRandomNumber === randomNumber) {
-        randomNumber = Math.floor(Math.random() * 5) + 1;
-    }
-    previousRandomNumber = randomNumber;
-    return randomNumber;
 }
 
 window.addEventListener("contextmenu", (event) => {
