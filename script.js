@@ -35,8 +35,16 @@ class AppState {
     static addBookToLibrary(book) {
         if (!this.myLibrary.includes(book)) { 
             this.myLibrary.push(book);
+            ScreenController.runBibliometrics();
             this.saveState(appState);
         }
+    }
+
+    static removeBookFromLibrary(idToDelete) {
+        for (let index = 0; index < this.myLibrary.length; index++) {
+            if (this.myLibrary[index].id === idToDelete) this.myLibrary.splice(index, 1);
+        }
+        ScreenController.runBibliometrics();
     }
 
     static rehydrateBook(appState) {
@@ -46,12 +54,6 @@ class AppState {
             book.pictureNumber = element.pictureNumber;
             this.addBookToLibrary(book);
         });
-    }
-
-    static removeBookFromLibrary(idToDelete) {
-        for (let index = 0; index < this.myLibrary.length; index++) {
-            if (this.myLibrary[index].id === idToDelete) this.myLibrary.splice(index, 1);
-        }
     }
 
     static saveState() {
@@ -131,6 +133,7 @@ class ScreenController {
         changeReadStatusButton.addEventListener("pointerup", () => {
             book.changeReadStatus();
             this.renderBookText(book, bookDiv);
+            ScreenController.runBibliometrics();
         });
         bookDiv.appendChild(removeButton);
         bookDiv.appendChild(changeReadStatusButton);
@@ -165,7 +168,7 @@ class ScreenController {
     }
 
     static runBibliometrics() {
-        let totalBooks = myLibrary.length;
+        let totalBooks = AppState.myLibrary.length;
         let completedBooks = 0;
         let totalPages = 0;
         let pagesRead = 0;
