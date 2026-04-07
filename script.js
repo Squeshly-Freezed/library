@@ -98,47 +98,26 @@ class ScreenController {
         this.form.reset();
     }
 
-    static buildBookInDOM(book) {
+    static buildBookInDOM(book) {   
         if (!book.isDisplayed) {
             book.isDisplayed = true;
             const bookDiv = document.createElement("div");
             bookDiv.classList.add("book");
             bookDiv.dataset.id = book.id;
-            this.setTextContent(book, bookDiv);
+            this.renderBookText(book, bookDiv);
             this.addButtons(book, bookDiv);
             this.chooseBookBackground(book, bookDiv);
             this.bookGUI.appendChild(bookDiv);
         }
     }
 
-    // static setTextContent(book, bookDiv) {
-    //     const divList = document.getElementsByTagName("div");
-    //     [...divList].forEach((div) => {
-    //         if (div.dataset.id === book.id) {
-    //             [...div.children].forEach(child => {
-    //                 if (child.matches("div")) child.remove();
-    //             });
-    //         }
-    //         const textDiv = document.createElement("div");
-    //         textDiv.textContent = `Title: ${book.title}\n\nAuthor: ${book.author}\n\nPages: ${book.pages}\n\nFinished: ${book.readStatus === true ? "Yes" : "No"}`;
-    //         bookDiv.appendChild(textDiv);
-    //     });
-    //     saveState(appState); // keep here ?
-    // }
-
-    static setTextContent(book, bookDiv) { //rename to renderTextOnBooks ?
-        const divList = document.getElementsByTagName("div");
-        [...divList].forEach((div) => {
-            if (div.dataset.id === book.id) {
-                [...div.children].forEach(child => {
-                    if (child.matches("div")) child.remove();
-                });
-            }
-            const textDiv = document.createElement("div");
-            textDiv.textContent = `Title: ${book.title}\n\nAuthor: ${book.author}\n\nPages: ${book.pages}\n\nFinished: ${book.readStatus === true ? "Yes" : "No"}`;
-            bookDiv.appendChild(textDiv);
+    static renderBookText(book, bookDiv) {
+        [...bookDiv.children].forEach(child => {
+            if (child.matches("div")) child.remove();
         });
-        AppState.saveState(appState); // keep here ?
+        const textDiv = document.createElement("div");
+        textDiv.textContent = `Title: ${book.title}\n\nAuthor: ${book.author}\n\nPages: ${book.pages}\n\nFinished: ${book.readStatus ? "Yes" : "No"}`;
+        bookDiv.appendChild(textDiv);
     }
 
     static addButtons(book, bookDiv) {
@@ -149,7 +128,10 @@ class ScreenController {
         const changeReadStatusButton = document.createElement("button");
         changeReadStatusButton.textContent = "Change";
         changeReadStatusButton.classList.add("change");
-        changeReadStatusButton.addEventListener("pointerup", () => book.changeReadStatus());
+        changeReadStatusButton.addEventListener("pointerup", () => {
+            book.changeReadStatus();
+            this.renderBookText(book, bookDiv);
+        });
         bookDiv.appendChild(removeButton);
         bookDiv.appendChild(changeReadStatusButton);
     }
