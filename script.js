@@ -5,13 +5,13 @@ class Book {
     pictureNumber = Helpers.getRandomNumber();
     id = crypto.randomUUID();
 
-    constructor (title, author, pages, readStatus) {
+    constructor(title, author, pages, readStatus) {
         this.title = title;
         this.author = author;
         this.pages = pages;
         this.readStatus = readStatus;
     }
-    changeReadStatus () {
+    changeReadStatus() {
         this.readStatus = !this.readStatus;
     }
 }
@@ -32,26 +32,33 @@ class Helpers {
 class AppState {
     static myLibrary = [];
 
-    rehydrateBook(appState) {
+    static addBookToLibrary(book) {
+        if (!this.myLibrary.includes(book)) { 
+            this.myLibrary.push(book);
+            this.saveState(appState);
+        }
+    }
+
+    static rehydrateBook(appState) {
         appState.forEach((element) => {
             let book = new Book(element.title, element.author, element.pages, element.readStatus);
             book.id = element.id;
             book.pictureNumber = element.pictureNumber;
-            addBookToLibrary(book);
+            this.addBookToLibrary(book);
         });
     }
 
-    removeBookFromArray () {
-        for (let index = 0; index < myLibrary.length; index++) {
-            if (myLibrary[index].id === idToDelete) myLibrary.splice(index, 1);
+    static removeBookFromLibrary(idToDelete) {
+        for (let index = 0; index < this.myLibrary.length; index++) {
+            if (this.myLibrary[index].id === idToDelete) this.myLibrary.splice(index, 1);
         }
     }
 
-    saveState() {
-        localStorage.setItem("myLibrary", JSON.stringify(myLibrary));
+    static saveState() {
+        localStorage.setItem("myLibrary", JSON.stringify(this.myLibrary));
     }
 
-    loadState() {
+    static loadState() {
         let storedState = localStorage.getItem("myLibrary");
         return storedState ? JSON.parse(storedState) : null;
     }
@@ -68,35 +75,58 @@ class ScreenController {
     static readStatus = document.querySelector("#readstatus");
     static bookGUI = document.querySelector(".bookgui");
 
-    static bindEvents () {
-        addBookButton.addEventListener("pointerup", modal.showModal);
-        form.addEventListener("submit", submitData);
-        window.addEventListener("contextmenu", (event) => {
-            event.preventDefault();
-        });
-        cancelButton.addEventListener("pointerup", () => {
-            form.reset();
-            modal.close();
+    static bindEvents() {
+        window.addEventListener("contextmenu", (event) => { event.preventDefault() });
+        this.addBookButton.addEventListener("pointerup", () => { this.modal.showModal() });
+        this.form.addEventListener("submit", (event) => this.submitData(event));
+        this.cancelButton.addEventListener("pointerup", () => {
+            this.form.reset();
+            this.modal.close();
         });
     }
 
-    submitData (event) {
+    static createBook() {
+        return new Book(this.title.value, this.author.value, this.pages.value, this.readStatus.checked)
+    }
+
+    static submitData(event) {
         event.preventDefault();
-        createBook();
-        modal.close();
-        form.reset();
+        let book = this.createBook()
+        AppState.addBookToLibrary(book);
+        this.buildBookInDOM(book);
+        this.modal.close();
+        this.form.reset();
     }
 
-    addBookToLibrary(book) {
-        if (!myLibrary.includes(book)) { 
-            myLibrary.push(book);
-            saveState(appState);
+    static buildBookInDOM(book) {
+        if (!book.isDisplayed) {
+            book.isDisplayed = true;
+            const bookDiv = document.createElement("div");
+            bookDiv.classList.add("book");
+            bookDiv.dataset.id = book.id;
+            this.setTextContent(book, bookDiv);
+            this.addButtons(book, bookDiv);
+            this.chooseBookBackground(book, bookDiv);
+            this.bookGUI.appendChild(bookDiv);
         }
-        runBibliometrics();
-        buildBookInDOM(book);
     }
 
-    setTextContent (book) {
+    // static setTextContent(book, bookDiv) {
+    //     const divList = document.getElementsByTagName("div");
+    //     [...divList].forEach((div) => {
+    //         if (div.dataset.id === book.id) {
+    //             [...div.children].forEach(child => {
+    //                 if (child.matches("div")) child.remove();
+    //             });
+    //         }
+    //         const textDiv = document.createElement("div");
+    //         textDiv.textContent = `Title: ${book.title}\n\nAuthor: ${book.author}\n\nPages: ${book.pages}\n\nFinished: ${book.readStatus === true ? "Yes" : "No"}`;
+    //         bookDiv.appendChild(textDiv);
+    //     });
+    //     saveState(appState); // keep here ?
+    // }
+
+    static setTextContent(book, bookDiv) { //rename to renderTextOnBooks ?
         const divList = document.getElementsByTagName("div");
         [...divList].forEach((div) => {
             if (div.dataset.id === book.id) {
@@ -108,14 +138,14 @@ class ScreenController {
             textDiv.textContent = `Title: ${book.title}\n\nAuthor: ${book.author}\n\nPages: ${book.pages}\n\nFinished: ${book.readStatus === true ? "Yes" : "No"}`;
             bookDiv.appendChild(textDiv);
         });
-        saveState(appState); // keep here ?
+        AppState.saveState(appState); // keep here ?
     }
 
-    addButtons (book, bookDiv) {
+    static addButtons(book, bookDiv) {
         const removeButton = document.createElement("button");
         removeButton.textContent = "Remove";
         removeButton.classList.add("remove");
-        removeButton.addEventListener("pointerup", removeBook);
+        removeButton.addEventListener("pointerup", this.removeBook);
         const changeReadStatusButton = document.createElement("button");
         changeReadStatusButton.textContent = "Change";
         changeReadStatusButton.classList.add("change");
@@ -124,7 +154,7 @@ class ScreenController {
         bookDiv.appendChild(changeReadStatusButton);
     }
 
-    chooseBookBackground(book, bookDiv) {
+    static chooseBookBackground(book, bookDiv) {
         bookDiv.style.backgroundSize = "cover";
         bookDiv.style.backgroundColor = "rgba(30, 30, 30, 0.8)";
         switch (book.pictureNumber) {
@@ -146,35 +176,18 @@ class ScreenController {
         }
     }
 
-    buildBookInDOM(book) {
-        if (!book.isDisplayed) {
-            book.isDisplayed = true;
-            const bookDiv = document.createElement("div");
-            bookDiv.classList.add("book");
-            bookDiv.dataset.id = book.id;
-            setTextContent(book, bookDiv);
-            addButtons(book, bookDiv);
-            chooseBookBackground(book, bookDiv);
-            bookGUI.appendChild(bookDiv);
-        }
-    }
-
-    removeBook(event) { // move whole function to SC
-        const idToDelete = event.target.parentElement.dataset.id;
-        for (let index = 0; index < myLibrary.length; index++) {
-            if (myLibrary[index].id === idToDelete) myLibrary.splice(index, 1);
-        } // loop is in AppState
-        saveState(appState);
+    static removeBook(event) {
+        AppState.removeBookFromLibrary(event.target.parentElement.dataset.id);
+        AppState.saveState(appState);
         event.target.parentElement.remove();
-        // runBibliometrics(); move to SC
     }
 
-    runBibliometrics() {
+    static runBibliometrics() {
         let totalBooks = myLibrary.length;
         let completedBooks = 0;
         let totalPages = 0;
         let pagesRead = 0;
-        myLibrary.forEach(book => {
+        AppState.myLibrary.forEach(book => {
             totalPages += parseInt(book.pages);
             if (book.readStatus) {
                 completedBooks++;
@@ -188,5 +201,7 @@ class ScreenController {
     }
 }
 
-let appState = loadState() || [];
-rehydrateBook(appState);
+ScreenController.bindEvents();
+
+let appState = AppState.loadState() || [];
+AppState.rehydrateBook(appState);
