@@ -45,6 +45,7 @@ class AppState {
             if (this.myLibrary[index].id === idToDelete) this.myLibrary.splice(index, 1);
         }
         ScreenController.runBibliometrics();
+        this.saveState(appState);
     }
 
     static rehydrateBook(appState) {
@@ -53,6 +54,7 @@ class AppState {
             book.id = element.id;
             book.pictureNumber = element.pictureNumber;
             this.addBookToLibrary(book);
+            ScreenController.buildBookInDOM(book);
         });
     }
 
@@ -133,6 +135,7 @@ class ScreenController {
         changeReadStatusButton.addEventListener("pointerup", () => {
             book.changeReadStatus();
             this.renderBookText(book, bookDiv);
+            AppState.saveState();
             ScreenController.runBibliometrics();
         });
         bookDiv.appendChild(removeButton);
@@ -163,7 +166,6 @@ class ScreenController {
 
     static removeBook(event) {
         AppState.removeBookFromLibrary(event.target.parentElement.dataset.id);
-        AppState.saveState(appState);
         event.target.parentElement.remove();
     }
 
