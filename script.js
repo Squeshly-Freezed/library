@@ -1,5 +1,18 @@
 "use strict";
 
+class Helpers {
+    static #randomNumber = 0;
+    static #previousRandomNumber = 0;
+
+    static getRandomNumber() {
+        while (this.#previousRandomNumber === this.#randomNumber) {
+            this.#randomNumber = Math.floor(Math.random() * 5) + 1;
+        }
+        this.#previousRandomNumber = this.#randomNumber;
+        return this.#randomNumber;
+    }
+}
+
 class Book {
     isDisplayed = false;
     pictureNumber = Helpers.getRandomNumber();
@@ -16,19 +29,6 @@ class Book {
     }
 }
 
-class Helpers {
-    static #randomNumber = 0;
-    static #previousRandomNumber = 0;
-
-    static getRandomNumber() {
-        while (this.#previousRandomNumber === this.#randomNumber) {
-            this.#randomNumber = Math.floor(Math.random() * 5) + 1;
-        }
-        this.#previousRandomNumber = this.#randomNumber;
-        return this.#randomNumber;
-    }
-}
-
 class AppState {
     static myLibrary = [];
 
@@ -36,7 +36,7 @@ class AppState {
         if (!this.myLibrary.includes(book)) { 
             this.myLibrary.push(book);
             ScreenController.runBibliometrics();
-            this.saveState(appState);
+            this.saveState();
         }
     }
 
@@ -45,11 +45,11 @@ class AppState {
             if (this.myLibrary[index].id === idToDelete) this.myLibrary.splice(index, 1);
         }
         ScreenController.runBibliometrics();
-        this.saveState(appState);
+        this.saveState();
     }
 
-    static rehydrateBook(appState) {
-        appState.forEach((element) => {
+    static rehydrateBooks(savedBooks) {
+        savedBooks.forEach((element) => {
             let book = new Book(element.title, element.author, element.pages, element.readStatus);
             book.id = element.id;
             book.pictureNumber = element.pictureNumber;
@@ -78,6 +78,16 @@ class ScreenController {
     static pages = document.querySelector("#pages");
     static readStatus = document.querySelector("#readstatus");
     static bookGUI = document.querySelector(".bookgui");
+    static totalBookDiv = document.querySelector(".totalbooks")
+    static completedBooksDiv = document.querySelector(".completedbooks")
+    static totalPagesDiv = document.querySelector(".totalpages")
+    static pagesReadDiv = document.querySelector(".pagesread")
+
+    static init() {
+        const savedBooks = AppState.loadState() || [];
+        AppState.rehydrateBooks(savedBooks);
+        ScreenController.bindEvents();
+    }
 
     static bindEvents() {
         window.addEventListener("contextmenu", (event) => { event.preventDefault() });
@@ -181,14 +191,12 @@ class ScreenController {
                 pagesRead += parseInt(book.pages);
             }
         });
-        document.querySelector(".totalbooks").textContent = `Total Books = ${totalBooks}`;
-        document.querySelector(".completedbooks").textContent = `Completed Books = ${completedBooks}`;
-        document.querySelector(".totalpages").textContent = `Total Pages = ${totalPages}`;
-        document.querySelector(".pagesread").textContent = `Pages Read = ${pagesRead}`;
+        this.totalBookDiv.textContent = `Total Books = ${totalBooks}`;
+        this.completedBooksDiv.textContent = `Completed Books = ${completedBooks}`;
+        this.totalPagesDiv.textContent = `Total Pages = ${totalPages}`;
+        this.pagesReadDiv.textContent = `Pages Read = ${pagesRead}`;
     }
 }
 
-ScreenController.bindEvents();
+ScreenController.init();
 
-let appState = AppState.loadState() || [];
-AppState.rehydrateBook(appState);

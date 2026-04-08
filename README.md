@@ -31,3 +31,4 @@ What I've learned:
 My thoughts on the project:
 This project has turned out well - aesthetically pleasing, fully responsive, and very functional. It does what I wanted it to do, and with no bugs.
 Added a few bells and whistles, and did some rough tinkering with LocalStorage - got working save state functionality.
+08/04/26: Refactored the code to use classes instead of plain objects. Far more organized, some circular dependency still exists between ScreenController and AppState however.
